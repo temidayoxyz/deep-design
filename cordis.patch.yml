@@ -1,0 +1,4 @@
+# The deep-design bundle layer: inserts the plugin row into the profile.
+- insert:
+    - id: deep-design
+      name: dsh-deep-design
