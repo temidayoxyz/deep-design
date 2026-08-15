@@ -1,5 +1,5 @@
 ---
-name: design-qa
+name: deep-design-qa
 description: Mandatory visual quality-assurance loop for design work: render the artifact headlessly, run the critic pass (a subagent forbidden from writing code that produces a structured visual diagnosis), fix findings, re-render, compare. Use this Skill for every HTML/CSS/SVG design artifact before delivering.
 ---
 

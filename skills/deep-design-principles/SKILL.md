@@ -1,5 +1,5 @@
 ---
-name: design-principles
+name: deep-design-principles
 description: The core design intelligence for every design task: first-principles brief, design language before implementation, composition, motion, the anti-slop audits, the QA rubric, and the final self-review. Load this Skill before designing anything; design-qa covers the verification loop after building.
 ---
 
