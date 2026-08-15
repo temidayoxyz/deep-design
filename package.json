@@ -1,7 +1,7 @@
 {
   "name": "dsh-deep-design",
   "version": "0.1.0",
-  "description": "Design mode for DeepSeek Harness: the design-loop agent preset plus the design-principles and design-qa skill packs",
+  "description": "Deep Design — design mode for DeepSeek Harness: the design-loop agent preset plus design-principles and design-qa skill packs",
   "type": "module",
   "main": "index.js",
   "files": [
