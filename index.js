@@ -58,6 +58,7 @@ export function apply(ctx) {
         name: skill.name,
         description: skill.description,
         content: skill.content,
+        source: 'runtime',
       })
     } catch (error) {
       ctx.logger?.warn?.(`[deep-design] failed to register skill ${entry}: ${error}`)

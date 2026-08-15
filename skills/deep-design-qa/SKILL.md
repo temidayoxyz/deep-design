@@ -24,7 +24,7 @@ Render at least two viewports: desktop (1440 wide) and mobile (390 wide). Check 
 
 ## 2. Critic pass
 
-Spawn a **subagent** that is forbidden from writing code. Its only output is a structured visual diagnosis. Use the subagent tool with:
+The critique is the critic's job, not yours. **The main agent never attempts to view the screenshot itself** — reading images is reserved for the critic subagent, which reports back a structured diagnosis. Spawn a **subagent** that is forbidden from writing code, with:
 
 **persona:**
 
@@ -32,7 +32,7 @@ Spawn a **subagent** that is forbidden from writing code. Its only output is a s
 
 **prompt:**
 
-> Read the artifact file `<path>/index.html` and its rendered screenshots `<path>/full.png` (desktop) and `<path>/mobile.png` (mobile). If you can view images, critique them visually. Produce a structured diagnosis with exactly these sections:
+> Read the artifact file `<path>/index.html` and its rendered screenshots `<path>/full.png` (desktop) and `<path>/mobile.png` (mobile). Ground your diagnosis in what you can actually observe: if you can view images, critique them visually; if reading an image fails because you have no image input, do not retry it — fall back to pixel sampling the PNG programmatically plus a DOM dump to verify layout. Produce a structured diagnosis with exactly these sections:
 >
 > 1. Hierarchy — does the eye know where to go first?
 > 2. Composition — does the layout feel intentional from its silhouette?
@@ -47,11 +47,9 @@ Spawn a **subagent** that is forbidden from writing code. Its only output is a s
 >
 > End with a Top-5 fixes list: the five concrete changes with the biggest quality gain, most specific first. Report only — do not modify files.
 
-If no subagent provider is available, perform the critic pass yourself in one structured block following the same template BEFORE writing any fix. The rule is the same either way: **diagnosis first, code after.**
+If no subagent provider is available, perform the critic pass yourself in one structured block following the same template BEFORE writing any fix — and in that case too, never attempt to read the image yourself; pixel-sample instead. The rule is the same either way: **diagnosis first, code after.**
 
-## 3. Vision-capable model vs pixel sampling
-
-If the current model can read images, critique the screenshots visually. If `read_image` fails because the model has no image input, do not pretend to look — pixel-sample instead:
+## 3. Pixel sampling (for a critic without vision)
 
 ```powershell
 Add-Type -AssemblyName System.Drawing
