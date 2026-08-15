@@ -17,11 +17,11 @@ Both skills register globally, so any agent mode can load them from the skill ca
 ## Install
 
 ```sh
-dsh plugin add dsh-deep-design    # from the npm registry once published, or
-dsh plugin add ./deep-design      # from a checkout
+dsh plugin --profile web add dsh-deep-design    # from the npm registry once published, or
+dsh plugin --profile web add ./deep-design      # from a checkout
 ```
 
-Restart the Web UI, open the new-session screen, and choose **Designer** from the agent-preset chip.
+Restart the Web UI, open the new-session screen, and choose **Designer** from the agent-preset chip. (The `web` profile is the one `dsh web` boots; use the same command with another profile name for other surfaces.)
 
 The plugin installs the preset into `$DSH_HOME/.agent-presets/design/`, the standard user-preset directory every deployment scans. Installation is idempotent and never overwrites an existing directory — once you edit your copy, it is yours.
 
