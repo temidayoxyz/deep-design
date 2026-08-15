@@ -21,7 +21,7 @@ dsh plugin --profile web add dsh-deep-design    # from the npm registry once pub
 dsh plugin --profile web add ./deep-design      # from a checkout
 ```
 
-Restart the Web UI, open the new-session screen, and choose **Designer** from the agent-preset chip. (The `web` profile is the one `dsh web` boots; use the same command with another profile name for other surfaces.)
+Restart the Web UI, open the new-session screen, and choose **Deep Design** from the agent-preset chip. (The `web` profile is the one `dsh web` boots; use the same command with another profile name for other surfaces.)
 
 The plugin installs the preset into `$DSH_HOME/.agent-presets/design/`, the standard user-preset directory every deployment scans. Installation is idempotent and never overwrites an existing directory — once you edit your copy, it is yours.
 
@@ -38,7 +38,7 @@ Design memory compounds across sessions: the loop reads `.design/` in the worksp
 
 ## Notes
 
-- Best with a vision-capable model for Designer sessions — the critic sees better with eyes. The pixel-sampling fallback keeps the loop honest without one.
+- Best with a vision-capable model for Deep Design sessions — the critic sees better with eyes. The pixel-sampling fallback keeps the loop honest without one.
 - Web research is enabled on the preset (`fetch: true`); configure the harness's web provider for reference grounding.
 - Deep Design runs entirely on your machine. Nothing leaves it unless you choose a cloud model.
 
