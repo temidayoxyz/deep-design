@@ -1,5 +1,7 @@
 # Deep Design
 
+<img src="public/deep-design.png" alt="Deep Design — the render glass" width="1280" />
+
 **Design mode for DeepSeek Harness** — a self-hosted alternative to Claude Design, Open Design, Google Stitch, and Figma Make, built on the DeepSeek Harness agent engine.
 
 Deep Design turns your local harness into a design studio. It runs the same loop those products run — brief → direction → artifact → critique → deliver — with rendered visual QA at every pass, on your machine, with your own models and API keys.
