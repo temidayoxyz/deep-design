@@ -8,11 +8,11 @@ Deep Design turns your local harness into a design studio. It runs the same loop
 
 One plugin, three things:
 
-1. **Designer** — an agent preset in your roster: a complete design agent (shell, files, web research, skills, plans, subagents, workflows) whose entire job is the design loop.
+1. **Deep Design** — an agent preset in your roster: a complete design agent (shell, files, web research, skills, plans, subagents, workflows) whose entire job is the design loop.
 2. **`deep-design-principles`** — the design intelligence: first-principles brief, design language before implementation, composition, motion, anti-slop audits, a scoring rubric, and a final self-review.
 3. **`deep-design-qa`** — the visual feedback loop: headless render at desktop and mobile → a critic pass (a subagent that diagnoses but never writes code) → targeted fixes → re-render → compare. With a pixel-sampling fallback for models without image input.
 
-Both skills register globally, so any agent mode can load them from the skill catalog — not just Designer sessions.
+Both skills register globally, so any agent mode can load them from the skill catalog — not just Deep Design sessions.
 
 ## Install
 
