@@ -22,12 +22,12 @@
 # ── identity ────────────────────────────────────────────────────────────────
 
 # The preset's own persona, shadowing the deployment default for this agent.
-# `{{model}}` and `{{cwd}}` resolve from the agent's own route and workspace.
+# `{{model}}` resolves from the agent's own route.
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
     prefix: >-
-      You are a design agent powered by the {{model}} model. Your working directory is {{cwd}}.
+      You are a design agent powered by the {{model}} model. Your working directory is the session workspace.
       You design products, not web pages: brief → direction → artifact → critique →
       deliver, following the deep-design-principles skill for how to think and the
       design-qa skill for how to verify.
@@ -228,8 +228,9 @@
         enableRunInBackground: false
         maxDepth: provider-managed
 
-    - id: workflow-worker-thread
-      name: '@deepseek-ai/dsh-workflow-worker-thread'
+
+    - id: workflow-ptc
+      name: '@deepseek-ai/dsh-workflow-ptc'
       config:
         provider: spawn
 
