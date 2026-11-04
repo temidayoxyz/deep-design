@@ -1,32 +1,30 @@
 // deep-design — the Design mode plugin for DeepSeek Harness.
 //
-// Two jobs on apply:
+// On apply:
 //   1. Register the design-principles and design-qa skill packs with the
-//      skills registry, so every agent (not just Designer sessions) can
-//      load them from the skill catalog.
-//   2. Install the `design` agent preset into the harness-home user preset
-//      directory ($DSH_HOME/.agent-presets/design), which every deployment
-//      scans by default — the Designer mode appears in the preset roster
-//      without touching the host configuration.
-//
-// The preset install is idempotent and never overwrites an existing
-// directory: once a user edits their copy, it is theirs.
+//      skills registry, so every agent (not just Designer sessions) can load
+//      them from the skill catalog.
+//   2. Register the `design` agent preset from preset/agent.cordis.yml with
+//      the agent-presets registry, so it appears in the preset roster and can
+//      be selected by new sessions.
 
+import { createRequire } from 'node:module'
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const inject = ['skills']
+const require = createRequire(import.meta.url)
+const yaml = require('js-yaml')
 
 const packageDir = dirname(fileURLToPath(import.meta.url))
 
-/** $DSH_HOME or the default harness home (~/.dsh). */
+export const inject = ['agentPresets', 'skills']
+
 function dshHome() {
   return process.env.DSH_HOME ?? join(homedir(), '.dsh')
 }
 
-/** Parse a SKILL.md into its registry fields. */
 function readSkill(dir) {
   const raw = readFileSync(join(dir, 'SKILL.md'), 'utf8')
   const meta = {}
@@ -46,7 +44,7 @@ function readSkill(dir) {
   }
 }
 
-export function apply(ctx) {
+export async function apply(ctx) {
   // 1. Register the skill packs.
   const skillsDir = join(packageDir, 'skills')
   for (const entry of readdirSync(skillsDir)) {
@@ -65,11 +63,31 @@ export function apply(ctx) {
     }
   }
 
-  // 2. Install the preset (idempotent; never overwrites a user's copy).
-  const presetSrc = join(packageDir, 'preset')
-  const presetDst = join(dshHome(), '.agent-presets', 'design')
-  if (!existsSync(presetDst)) {
-    mkdirSync(presetDst, { recursive: true })
-    cpSync(presetSrc, presetDst, { recursive: true })
+  // 2. Register the design preset.
+  try {
+    const presetPath = join(packageDir, 'preset', 'agent.cordis.yml')
+    const raw = readFileSync(presetPath, 'utf8')
+    const plugins = yaml.load(raw)
+    await ctx.agentPresets.register({
+      id: 'design',
+      name: 'Deep Design',
+      description: 'The design loop mode — brief → direction → artifact → critique → deliver — producing prototypes and deliverables.',
+      order: 3,
+      plugins,
+    })
+  } catch (error) {
+    ctx.logger?.warn?.(`[deep-design] failed to register design preset: ${error}`)
+  }
+
+  // Back-compat copy is harmless but no longer required:
+  // keep the legacy directory populated for tools that still expect it.
+  try {
+    const legacy = join(dshHome(), '.agent-presets', 'design')
+    if (!existsSync(legacy)) {
+      mkdirSync(legacy, { recursive: true })
+      cpSync(join(packageDir, 'preset'), legacy, { recursive: true })
+    }
+  } catch (error) {
+    ctx.logger?.warn?.(`[deep-design] legacy preset copy failed: ${error}`)
   }
 }
