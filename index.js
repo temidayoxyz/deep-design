@@ -17,6 +17,15 @@ import { fileURLToPath } from 'node:url'
 const require = createRequire(import.meta.url)
 const yaml = require('js-yaml')
 
+// Cordis compositions may use `!!js` expressions in scalar rows (disabled
+// flags like `!!js process.platform === 'win32'`). Parse those with a tiny
+// type so js-yaml does not reject the whole composition before registration.
+const jsExprType = new yaml.Type('tag:yaml.org,2002:js', {
+  kind: 'scalar',
+  construct: (data) => new Function('process', `return ${data}`)(process),
+})
+const yamlSchema = yaml.DEFAULT_SCHEMA.extend([jsExprType])
+
 const packageDir = dirname(fileURLToPath(import.meta.url))
 
 export const inject = ['agentPresets', 'skills']
@@ -67,7 +76,7 @@ export async function apply(ctx) {
   try {
     const presetPath = join(packageDir, 'preset', 'agent.cordis.yml')
     const raw = readFileSync(presetPath, 'utf8')
-    const plugins = yaml.load(raw)
+    const plugins = yaml.load(raw, { schema: yamlSchema })
     await ctx.agentPresets.register({
       id: 'design',
       name: 'Deep Design',
@@ -79,8 +88,7 @@ export async function apply(ctx) {
     ctx.logger?.warn?.(`[deep-design] failed to register design preset: ${error}`)
   }
 
-  // Back-compat copy is harmless but no longer required:
-  // keep the legacy directory populated for tools that still expect it.
+  // Back-compat, for tools still looking under the legacy preset directory.
   try {
     const legacy = join(dshHome(), '.agent-presets', 'design')
     if (!existsSync(legacy)) {
